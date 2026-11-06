@@ -11,6 +11,14 @@ nav::-webkit-scrollbar{display:none}
 button{font:inherit;color:var(--fg);background:transparent;border:1px solid var(--bd);
   border-radius:8px;padding:9px 12px;white-space:nowrap;cursor:pointer}
 nav button[aria-current="true"]{background:var(--act);color:var(--actfg);border-color:var(--act)}
-#theme{flex:0 0 auto;font-size:16px;padding:7px 11px}
-main{flex:1 1 auto;min-height:0;position:relative;touch-action:none}
+#theme,#fs,#side{flex:0 0 auto;padding:7px 10px;display:flex;align-items:center;justify-content:center}
+#theme{font-size:16px;padding:7px 11px}
+#side svg{transition:transform .15s}
+#side.off svg{transform:rotate(180deg)}
+#exit{display:none;position:fixed;z-index:10;
+  top:calc(env(safe-area-inset-top) + 6px);right:calc(env(safe-area-inset-right) + 6px);
+  padding:7px 9px;background:var(--bg);opacity:.6}
+body.fs header{display:none}
+body.fs #exit{display:flex}
+main{flex:1 1 auto;min-height:0;position:relative}
 .tradingview-widget-container,.tradingview-widget-container__widget{height:100%;width:100%}
