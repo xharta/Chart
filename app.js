@@ -75,7 +75,7 @@
       calendar: false,
       hide_volume: true,
       hide_top_toolbar: false,
-      hide_side_toolbar: true,
+      hide_side_toolbar: false,
       backgroundColor: theme === 'dark' ? '#000000' : '#ffffff',
       support_host: 'https://www.tradingview.com'
     });
@@ -99,7 +99,6 @@
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, 512, 512);
     ctx.fillStyle = '#fff';
-    // [centerX, wickTop, wickBottom, bodyTop, bodyBottom]
     [[170, 200, 330, 235, 300],
      [256, 150, 360, 190, 320],
      [342, 120, 300, 150, 250]].forEach(function (k) {
