@@ -19,15 +19,23 @@
     (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   var current = SYMBOLS.some(function (s) { return s[1] === get('sym'); })
     ? get('sym') : SYMBOLS[0][1];
+  var sideVisible = get('side') !== 'off';
 
   var tabs = document.getElementById('tabs');
   var chart = document.getElementById('chart');
   var themeBtn = document.getElementById('theme');
+  var sideBtn = document.getElementById('side');
+  var fsBtn = document.getElementById('fs');
+  var exitBtn = document.getElementById('exit');
   var themeMeta = document.querySelector('meta[name="theme-color"]');
 
   function applyTheme() {
     document.documentElement.setAttribute('data-theme', theme);
     themeMeta.setAttribute('content', theme === 'dark' ? '#000000' : '#ffffff');
+  }
+
+  function applySideBtn() {
+    sideBtn.classList.toggle('off', !sideVisible);
   }
 
   function renderTabs() {
@@ -75,7 +83,7 @@
       calendar: false,
       hide_volume: true,
       hide_top_toolbar: false,
-      hide_side_toolbar: false,
+      hide_side_toolbar: !sideVisible,
       backgroundColor: theme === 'dark' ? '#000000' : '#ffffff',
       support_host: 'https://www.tradingview.com'
     });
@@ -88,6 +96,32 @@
     set('theme', theme);
     applyTheme();
     loadChart();
+  });
+
+  sideBtn.addEventListener('click', function () {
+    sideVisible = !sideVisible;
+    set('side', sideVisible ? 'on' : 'off');
+    applySideBtn();
+    loadChart();
+  });
+
+  function setFs(on) {
+    document.body.classList.toggle('fs', on);
+    var el = document.documentElement;
+    try {
+      if (on && el.requestFullscreen) {
+        var p = el.requestFullscreen();
+        if (p && p.catch) p.catch(function () {});
+      } else if (!on && document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    } catch (e) {}
+  }
+
+  fsBtn.addEventListener('click', function () { setFs(true); });
+  exitBtn.addEventListener('click', function () { setFs(false); });
+  document.addEventListener('fullscreenchange', function () {
+    if (!document.fullscreenElement) document.body.classList.remove('fs');
   });
 
   // apple-touch-icon (iOS needs PNG): black background + 3 white candles, generated locally
@@ -112,6 +146,7 @@
   } catch (e) {}
 
   applyTheme();
+  applySideBtn();
   renderTabs();
   loadChart();
 
