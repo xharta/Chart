@@ -2,7 +2,7 @@
 :root[data-theme="dark"]{--bg:#000;--fg:#eee;--mut:#888;--bd:#222;--act:#eee;--actfg:#000}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);
-  font:14px/1 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;overflow:hidden}
+  font:14px/1 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;overflow:hidden;overscroll-behavior:none}
 body{display:flex;flex-direction:column;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 header{display:flex;align-items:center;gap:6px;padding:6px;border-bottom:1px solid var(--bd);flex:0 0 auto}
