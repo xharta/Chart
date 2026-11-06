@@ -1,0 +1,16 @@
+:root{--bg:#fff;--fg:#111;--mut:#777;--bd:#ddd;--act:#111;--actfg:#fff}
+:root[data-theme="dark"]{--bg:#000;--fg:#eee;--mut:#888;--bd:#222;--act:#eee;--actfg:#000}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);
+  font:14px/1 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;overflow:hidden}
+body{display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header{display:flex;align-items:center;gap:6px;padding:6px;border-bottom:1px solid var(--bd);flex:0 0 auto}
+nav{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+button{font:inherit;color:var(--fg);background:transparent;border:1px solid var(--bd);
+  border-radius:8px;padding:9px 12px;white-space:nowrap;cursor:pointer}
+nav button[aria-current="true"]{background:var(--act);color:var(--actfg);border-color:var(--act)}
+#theme{flex:0 0 auto;font-size:16px;padding:7px 11px}
+main{flex:1 1 auto;min-height:0;position:relative}
+.tradingview-widget-container,.tradingview-widget-container__widget{height:100%;width:100%}
