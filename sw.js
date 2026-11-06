@@ -1,4 +1,4 @@
-const CACHE = 'charts-v4';
+const CACHE = 'charts-v5';
 const FILES = ['./', 'index.html', 'style.css', 'app.js', 'manifest.webmanifest', 'icon.svg'];
 
 self.addEventListener('install', (e) => {
