@@ -1,8 +1,8 @@
 (function () {
   'use strict';
   var SYMBOLS = [
-    ['US100', 'OANDA:NAS100USD'],
-    ['US30', 'OANDA:US30USD'],
+    ['Nasdaq', 'OANDA:NAS100USD'],
+    ['Dow Jones', 'OANDA:US30USD'],
     ['XAUUSD', 'OANDA:XAUUSD'],
     ['EURUSD', 'OANDA:EURUSD'],
     ['USDJPY', 'OANDA:USDJPY'],
@@ -65,14 +65,15 @@
     s.textContent = JSON.stringify({
       autosize: true,
       symbol: current,
-      interval: '15',
-      timezone: 'Etc/UTC',
+      interval: '1',
+      timezone: 'Asia/Tehran',
       theme: theme,
       style: '1',
       locale: 'en',
       allow_symbol_change: false,
       save_image: false,
       calendar: false,
+      hide_volume: true,
       hide_top_toolbar: false,
       hide_side_toolbar: true,
       backgroundColor: theme === 'dark' ? '#000000' : '#ffffff',
@@ -89,13 +90,22 @@
     loadChart();
   });
 
-  // Solid black apple-touch-icon (iOS needs PNG), generated locally
+  // apple-touch-icon (iOS needs PNG): black background + 3 white candles, generated locally
   try {
     var c = document.createElement('canvas');
     c.width = c.height = 180;
     var ctx = c.getContext('2d');
+    ctx.scale(180 / 512, 180 / 512);
     ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, 180, 180);
+    ctx.fillRect(0, 0, 512, 512);
+    ctx.fillStyle = '#fff';
+    // [centerX, wickTop, wickBottom, bodyTop, bodyBottom]
+    [[170, 200, 330, 235, 300],
+     [256, 150, 360, 190, 320],
+     [342, 120, 300, 150, 250]].forEach(function (k) {
+      ctx.fillRect(k[0] - 5, k[1], 10, k[2] - k[1]);
+      ctx.fillRect(k[0] - 22, k[3], 44, k[4] - k[3]);
+    });
     var l = document.createElement('link');
     l.rel = 'apple-touch-icon';
     l.href = c.toDataURL('image/png');
