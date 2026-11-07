@@ -19,6 +19,7 @@
     (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   var current = SYMBOLS.some(function (s) { return s[1] === get('sym'); })
     ? get('sym') : SYMBOLS[0][1];
+  var panes = {}; // symbol -> container; each symbol keeps its own chart alive
 
   var tabs = document.getElementById('tabs');
   var chart = document.getElementById('chart');
@@ -43,7 +44,7 @@
         current = s[1];
         set('sym', current);
         renderTabs();
-        loadChart();
+        showSymbol();
       });
       tabs.appendChild(b);
     });
@@ -53,10 +54,9 @@
     }
   }
 
-  function loadChart() {
-    chart.textContent = '';
+  function createPane(sym) {
     var wrap = document.createElement('div');
-    wrap.className = 'tradingview-widget-container';
+    wrap.className = 'pane tradingview-widget-container';
     var inner = document.createElement('div');
     inner.className = 'tradingview-widget-container__widget';
     wrap.appendChild(inner);
@@ -66,7 +66,7 @@
     s.async = true;
     s.textContent = JSON.stringify({
       autosize: true,
-      symbol: current,
+      symbol: sym,
       interval: '1',
       timezone: 'Asia/Tehran',
       theme: theme,
@@ -78,21 +78,38 @@
       hide_volume: true,
       hide_top_toolbar: false,
       hide_side_toolbar: false,
+      overrides: { 'mainSeriesProperties.showCountdown': true },
       backgroundColor: theme === 'dark' ? '#000000' : '#ffffff',
       support_host: 'https://www.tradingview.com'
     });
     wrap.appendChild(s);
     chart.appendChild(wrap);
+    panes[sym] = wrap;
   }
 
+  // Switching symbol only shows/hides charts: nothing reloads, drawings stay
+  function showSymbol() {
+    if (!panes[current]) createPane(current);
+    Object.keys(panes).forEach(function (k) {
+      panes[k].classList.toggle('on', k === current);
+    });
+  }
+
+  function resetPanes() {
+    Object.keys(panes).forEach(function (k) { chart.removeChild(panes[k]); });
+    panes = {};
+    showSymbol();
+  }
+
+  // Theme change must rebuild the charts (drawings are lost)
   themeBtn.addEventListener('click', function () {
     theme = theme === 'dark' ? 'light' : 'dark';
     set('theme', theme);
     applyTheme();
-    loadChart();
+    resetPanes();
   });
 
-  // Full screen: only CSS/resizing, the chart is NOT reloaded, so drawings stay
+  // Full screen: only CSS/resizing, charts are NOT reloaded
   function setFs(on) {
     document.body.classList.toggle('fs', on);
     try {
@@ -113,7 +130,7 @@
     if (!document.fullscreenElement) document.body.classList.remove('fs');
   });
 
-  // apple-touch-icon (iOS needs PNG): black background + 3 white candles, generated locally
+  // apple-touch-icon (iOS needs PNG): black background + white flying saucer, generated locally
   try {
     var c = document.createElement('canvas');
     c.width = c.height = 180;
@@ -122,11 +139,24 @@
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, 512, 512);
     ctx.fillStyle = '#fff';
-    [[170, 200, 330, 235, 300],
-     [256, 150, 360, 190, 320],
-     [342, 120, 300, 150, 250]].forEach(function (k) {
-      ctx.fillRect(k[0] - 5, k[1], 10, k[2] - k[1]);
-      ctx.fillRect(k[0] - 22, k[3], 44, k[4] - k[3]);
+    ctx.beginPath();
+    ctx.ellipse(256, 290, 120, 38, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(196, 266);
+    ctx.bezierCurveTo(196, 206, 226, 180, 256, 180);
+    ctx.bezierCurveTo(286, 180, 316, 206, 316, 266);
+    ctx.closePath();
+    ctx.fill();
+    ctx.lineWidth = 8;
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#000';
+    ctx.stroke();
+    ctx.fillStyle = '#000';
+    [[196, 292], [256, 300], [316, 292]].forEach(function (p) {
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 9, 0, Math.PI * 2);
+      ctx.fill();
     });
     var l = document.createElement('link');
     l.rel = 'apple-touch-icon';
@@ -136,7 +166,7 @@
 
   applyTheme();
   renderTabs();
-  loadChart();
+  showSymbol();
 
   if ('serviceWorker' in navigator) {
     addEventListener('load', function () {
