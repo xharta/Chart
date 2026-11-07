@@ -1,6 +1,6 @@
 {
-  "name": "Charts",
-  "short_name": "Charts",
+  "name": "Spaceship",
+  "short_name": "Spaceship",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
